@@ -1,0 +1,10 @@
+.DS_Store
+bin
+.idea
+nohup.out
+outputs
+
+.env
+.env.*
+*.log
+*.sqlite
