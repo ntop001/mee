@@ -9,20 +9,20 @@ import (
 	"time"
 )
 
-type Client struct {
+type Web3Client struct {
 	url string
 }
 
-func NewWeb3Client(rpcEndpoint string) *Client {
-	return &Client{ url: rpcEndpoint }
+func NewWeb3Client(rpcEndpoint string) *Web3Client {
+	return &Web3Client{ url: rpcEndpoint }
 }
 
-func (web3 *Client) Call(target string, callData string) (string, error) {
+func (web3 *Web3Client) Call(target string, callData string) (string, error) {
 	params := []interface{} {
 		&struct { To string `json:"to"`; Data string `json:"data"`} { target, callData },
 		"latest",
 	}
-	data, err := web3.rpcCall("eth_call", params)
+	data, err := web3.RpcCall("eth_call", params)
 	if err != nil {
 		return "", err
 	}
@@ -33,8 +33,8 @@ func (web3 *Client) Call(target string, callData string) (string, error) {
 	return resultStr, nil
 }
 
-func (web3 *Client) GetBlockNumber() (int64, error) {
-	data, err := web3.rpcCall("eth_blockNumber", []interface{}{})
+func (web3 *Web3Client) GetBlockNumber() (int64, error) {
+	data, err := web3.RpcCall("eth_blockNumber", []interface{}{})
 	if err != nil {
 		return 0, err
 	}
@@ -46,7 +46,7 @@ func (web3 *Client) GetBlockNumber() (int64, error) {
 	return num, err
 }
 
-func (web3 *Client) rpcCall(method string, params []interface{}) ([]byte, error) {
+func (web3 *Web3Client) RpcCall(method string, params []interface{}) ([]byte, error) {
 	body, err := json.Marshal(&rpcBody{
 		JsonRpc: "2.0",
 		Id: 1,

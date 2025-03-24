@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestNewClient(t *testing.T) {
+func TestNewWeb3Client(t *testing.T) {
 	web3 := NewWeb3Client(os.Getenv("WEB3RPC_URL"))
 	target := "0xf4d2888d29d722226fafa5d9b24f9164c092421e"
 	callData := "0x06fdde03"
@@ -47,7 +47,7 @@ func TestWeb3Client_rpcCall(t *testing.T) {
 	web3 := NewWeb3Client(os.Getenv("WEB3RPC_URL"))
 
 	// get balance of account
-	data, err := web3.rpcCall("eth_getBalance", []interface{} { "0xbd13c1365b9985387e8e9571cbcd319f7b23daed", "latest" })
+	data, err := web3.RpcCall("eth_getBalance", []interface{} { "0xbd13c1365b9985387e8e9571cbcd319f7b23daed", "latest" })
 	if err != nil {
 		t.Fatal(err)
 	}
