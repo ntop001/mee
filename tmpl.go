@@ -1,4 +1,4 @@
-package web3
+package mee
 
 // ParseTmpl parse template into args
 // eg: "(int256,string,[](int256,int16),(uint256, string))"
