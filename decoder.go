@@ -79,10 +79,16 @@ func abiDecodeType(b, block string, a *Arg) (interface{}, int) {
 	var val interface{}
 	sz := 64
 	switch a.Type {
-	case "int256", "uint256", "bool", "address":
-		val = hex64
+	case "int64", "uint64":
+		val = HexToInt64(hex64)
+	case "int256", "uint256":
+		val = HexToBig(hex64)
+	case "bool":
+		val = HexToBool(hex64)
+	case "address":
+		val = HexToAddress(hex64)
 	case "bytes32":
-		val = hex64
+		val = HexToStr(hex64)
 	case "bytes", "string":
 		val = abiDecodeBytes(hex64, block)
 	case "tuple":
@@ -99,7 +105,7 @@ func abiDecodeBytes(hex64, block string) string {
 	offset := HexToInt64(hex64)
 	valBlock := block[offset*2:]
 	sz := HexToInt64(valBlock[:64])
-	return valBlock[64: 64+sz*2]
+	return HexToStr(valBlock[64: 64+sz*2])
 }
 
 //if tuple has dynamic type, it's a dynamic tuple

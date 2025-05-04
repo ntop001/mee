@@ -22,7 +22,7 @@ func Test_AbiDecodeInt256(t *testing.T) {
 	results := AbiDecode(data, args)
 	fmt.Println("get results:", len(results))
 	for i, v := range results {
-		fmt.Println(i, HexToBig(v.(string)))
+		fmt.Println(i, v)
 	}
 }
 
@@ -46,8 +46,8 @@ func Test_Decode0(t *testing.T) {
 
 	// decode, abc, def
 	results := TmplDecode(data, tmpl)
-	fmt.Println("get byte32:", results[0], HexToStr(results[0].(string)))
-	fmt.Println("get byte32:", results[1], HexToStr(results[1].(string)))
+	fmt.Println("get byte32:", results[0].(string))
+	fmt.Println("get byte32:", results[1].(string))
 }
 
 // eg: https://docs.soliditylang.org/en/latest/abi-spec.html#examples
@@ -58,8 +58,8 @@ func Test_Decode1(t *testing.T) {
 
 	// decode, 69, true
 	results := TmplDecode(data, tmpl)
-	fmt.Println("get uint256:", results[0], HexToInt64(results[0].(string)))
-	fmt.Println("get bool:", results[1], HexToBool(results[1].(string)))
+	fmt.Println("get uint256:", results[0])
+	fmt.Println("get bool:", results[1])
 }
 
 // eg: https://docs.soliditylang.org/en/latest/abi-spec.html#examples
@@ -70,8 +70,8 @@ func Test_Decode2(t *testing.T) {
 
 	// decode, dave, true, [1,2,3]
 	results := TmplDecode(data, tmpl)
-	fmt.Println("get bytes:", results[0], HexToStr(results[0].(string)))
-	fmt.Println("get bool:", results[1], HexToBool(results[1].(string)))
+	fmt.Println("get bytes:", results[0])
+	fmt.Println("get bool:", results[1])
 	fmt.Println("get array:", results[2])
 }
 
@@ -85,8 +85,8 @@ func Test_Decode3(t *testing.T) {
 	results := TmplDecode(data, tmpl)
 	fmt.Println("get uint256:", results[0])
 	fmt.Println("get []uint256:", results[1])
-	fmt.Println("get bytes32:", HexToStr(results[2].(string)))
-	fmt.Println("get bytes:", HexToStr(results[3].(string)))
+	fmt.Println("get bytes32:", results[2])
+	fmt.Println("get bytes:", results[3])
 }
 
 func Test_Decode4(t *testing.T) {
