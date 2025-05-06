@@ -12,7 +12,7 @@ func Test_AbiEncodeType(t *testing.T) {
 		int64(2),
 		true,
 		"0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
-		"sample",
+		[]byte("sample"),
 	}
 
 	// encode:
@@ -46,7 +46,7 @@ func Test_AbiEncodeString(t *testing.T) {
 // eg: https://docs.soliditylang.org/en/latest/abi-spec.html#examples
 func Test_AbiEncode0(t *testing.T)  {
 	data := []interface{} {
-		"abc", "def",
+		[]byte("abc"), []byte("def"),
 	}
 
 	//encode:
@@ -72,7 +72,7 @@ func Test_AbiEncode1(t *testing.T)  {
 // eg: https://docs.soliditylang.org/en/latest/abi-spec.html#examples
 func Test_AbiEncode2(t *testing.T)  {
 	data := []interface{} {
-		"dave", true, []interface{}{ big.NewInt(1), big.NewInt(2), big.NewInt(3) },
+		[]byte("dave"), true, []interface{}{ big.NewInt(1), big.NewInt(2), big.NewInt(3) },
 	}
 
 	//encode:
@@ -92,7 +92,7 @@ func Test_AbiEncode2(t *testing.T)  {
 // eg: https://docs.soliditylang.org/en/latest/abi-spec.html#use-of-dynamic-types
 func Test_AbiEncode3(t *testing.T)  {
 	data := []interface{} {
-		big.NewInt(0x123), []interface{}{ int64(0x456), int64(0x789)}, "1234567890", "Hello, world!",
+		big.NewInt(0x123), []interface{}{ int64(0x456), int64(0x789)}, []byte("1234567890"), "Hello, world!",
 	}
 
 	//encode:
@@ -105,7 +105,7 @@ func Test_AbiEncode3(t *testing.T)  {
 	//0000000000000000000000000000000000000000000000000000000000000789
 	//000000000000000000000000000000000000000000000000000000000000000d
 	//48656c6c6f2c20776f726c642100000000000000000000000000000000000000
-	hex := TmplEncode(data, "(uint256,[]uint64,bytes32,bytes)")
+	hex := TmplEncode(data, "(uint256,[]uint64,bytes32,string)")
 	HexPrettyPrint(hex)
 }
 

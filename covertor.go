@@ -65,3 +65,15 @@ func AddressToHex(a string) string {
 	return fmt.Sprintf("%064s", strings.TrimPrefix(a, "0x"))
 }
 
+func HexToBytes(hexStr string) []byte {
+	bytes, _ := hex.DecodeString(strings.TrimPrefix(hexStr, "0x"))
+	return bytes
+}
+
+func BytesToHex(bytes []byte) string {
+	_hex := hex.EncodeToString(bytes)
+	if sz := len(_hex); sz%64 != 0 {
+		_hex += strings.Repeat("0", 64-sz%64)
+	}
+	return _hex
+}

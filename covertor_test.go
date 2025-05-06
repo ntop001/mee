@@ -46,3 +46,13 @@ func TestAddressToHex(t *testing.T) {
 	hex := AddressToHex("0x00000000000058daae9fced885082f685d6a8f41")
 	fmt.Println("get hex:", hex)
 }
+
+func TestHexToBytes(t *testing.T) {
+	bytes := HexToBytes("0x06fdde03")
+	fmt.Println("get bytes:", bytes) //[6 253 222 3]
+}
+
+func TestBytesToHex(t *testing.T) {
+	hex := BytesToHex([]byte{ 6, 253, 222, 3 })
+	fmt.Println("get hex:", hex)
+}

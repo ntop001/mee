@@ -46,8 +46,8 @@ func Test_Decode0(t *testing.T) {
 
 	// decode, abc, def
 	results := TmplDecode(data, tmpl)
-	fmt.Println("get byte32:", results[0].(string))
-	fmt.Println("get byte32:", results[1].(string))
+	fmt.Println("get byte32:", string(results[0].([]byte)))
+	fmt.Println("get byte32:", string(results[1].([]byte)))
 }
 
 // eg: https://docs.soliditylang.org/en/latest/abi-spec.html#examples
@@ -70,7 +70,7 @@ func Test_Decode2(t *testing.T) {
 
 	// decode, dave, true, [1,2,3]
 	results := TmplDecode(data, tmpl)
-	fmt.Println("get bytes:", results[0])
+	fmt.Println("get bytes:", string(results[0].([]byte)))
 	fmt.Println("get bool:", results[1])
 	fmt.Println("get array:", results[2])
 }
@@ -85,8 +85,8 @@ func Test_Decode3(t *testing.T) {
 	results := TmplDecode(data, tmpl)
 	fmt.Println("get uint256:", results[0])
 	fmt.Println("get []uint256:", results[1])
-	fmt.Println("get bytes32:", results[2])
-	fmt.Println("get bytes:", results[3])
+	fmt.Println("get bytes32:", string(results[2].([]byte)))
+	fmt.Println("get bytes:", string(results[3].([]byte)))
 }
 
 func Test_Decode4(t *testing.T) {
@@ -127,7 +127,11 @@ func Test_Decode5(t *testing.T) {
 	results := TmplDecode(data, tmpl)
 	fields := results[0].([]interface{})
 	for i, v := range fields {
-		fmt.Println("get field:", i, v)
+		if i == 11 || i == 13 || i == 14 || i == 17 {
+			fmt.Println("get field:", i, BytesToHex(v.([]byte)))
+		} else {
+			fmt.Println("get field:", i, v)
+		}
 	}
 }
 

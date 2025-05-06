@@ -100,8 +100,10 @@ func abiEncodeType(data interface{}, a *Arg) (string, bool) {
 	case "address":
 		block = AddressToHex(data.(string))
 	case "bytes32":
-		block = StrToHex(data.(string))
-	case "string", "bytes":
+		block = BytesToHex(data.([]byte))
+	case "bytes":
+		block, dynamic = abiEncodeBytes(data.([]byte))
+	case "string":
 		block, dynamic = abiEncodeString(data.(string))
 	case "tuple":
 		block, dynamic = abiEncodeTuple(data.([]interface{}), a)
@@ -111,6 +113,13 @@ func abiEncodeType(data interface{}, a *Arg) (string, bool) {
 		panic("abi unknown type:"+a.Type)
 	}
 	return block, dynamic
+}
+
+func abiEncodeBytes(bytes []byte) (string, bool) {
+	hexStr := BytesToHex(bytes)
+	sz := int64(len(bytes)*2)
+	block := Int64ToHex(sz)+hexStr
+	return block, true
 }
 
 func abiEncodeString(str string) (string, bool) {
