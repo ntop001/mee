@@ -3,6 +3,7 @@ package mee
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"strconv"
@@ -67,6 +68,12 @@ func (web3 *Web3Client) RpcCall(method string, params []interface{}) ([]byte, er
 	}
 	result := &rpcResult{}
 	err = json.Unmarshal(data, result)
+	if err != nil {
+		return nil, err
+	}
+	if result.Error.Code != 0 {
+		return nil, fmt.Errorf("code: %d, msg: %s", result.Error.Code, result.Error.Message)
+	}
 	return result.Result, err
 }
 
@@ -85,4 +92,9 @@ type rpcResult struct {
 	JsonRpc string `json:"jsonrpc"`
 	Id int `json:"id"`
 	Result json.RawMessage `json:"result"`
+	Error struct{
+		Code int `json:"code"`
+		Message string `json:"message"`
+		Data string `json:"data"`
+	} `json:"error"`
 }
