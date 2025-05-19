@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"math/big"
 	"net/http"
-	"strconv"
 	"time"
 )
 
@@ -16,6 +16,21 @@ type Web3Client struct {
 
 func NewWeb3Client(rpcEndpoint string) *Web3Client {
 	return &Web3Client{ url: rpcEndpoint }
+}
+
+func (web3 *Web3Client) EstimateGas(tx *Tx) (int64, error) {
+	params := []interface{} {
+		ToData(tx), "latest",
+	}
+	data, err := web3.RpcCall("eth_estimateGas", params)
+	if err != nil {
+		return 0, err
+	}
+	var resultStr string
+	if err = json.Unmarshal(data, &resultStr); err != nil {
+		return 0, err
+	}
+	return HexToInt64(resultStr), nil
 }
 
 func (web3 *Web3Client) Call(target string, callData string) (string, error) {
@@ -34,6 +49,36 @@ func (web3 *Web3Client) Call(target string, callData string) (string, error) {
 	return resultStr, nil
 }
 
+func (web3 *Web3Client) GetTxByHash(hash string) (*TxData, error) {
+	params := []interface{} {
+		hash,
+	}
+	data, err := web3.RpcCall("eth_getTransactionByHash", params)
+	if err != nil {
+		return nil, err
+	}
+	txData := new(TxData)
+	if err = json.Unmarshal(data, txData); err != nil {
+		return nil, err
+	}
+	return txData, nil
+}
+
+func (web3 *Web3Client) GetTxReceipt(hash string) (*Receipt, error) {
+	params := []interface{} {
+		hash,
+	}
+	data, err := web3.RpcCall("eth_getTransactionReceipt", params)
+	if err != nil {
+		return nil, err
+	}
+	receipt := new(Receipt)
+	if err = json.Unmarshal(data, receipt); err != nil {
+		return nil, err
+	}
+	return receipt, nil
+}
+
 func (web3 *Web3Client) GetBlockNumber() (int64, error) {
 	data, err := web3.RpcCall("eth_blockNumber", []interface{}{})
 	if err != nil {
@@ -43,8 +88,33 @@ func (web3 *Web3Client) GetBlockNumber() (int64, error) {
 	if err = json.Unmarshal(data, &numberStr); err != nil {
 		return 0, err
 	}
-	num, err := strconv.ParseInt(numberStr[2:], 16, 64)
-	return num, err
+	return HexToInt64(numberStr), nil
+}
+
+func (web3 *Web3Client) GetBalance(address string) (*big.Int, error) {
+	params := []interface{} {
+		address,
+		"latest",
+	}
+	data, err := web3.RpcCall("eth_getBalance", params)
+	if err != nil {
+		return nil, err
+	}
+	var resultStr string
+	if err = json.Unmarshal(data, &resultStr); err != nil {
+		return nil, err
+	}
+	return HexToBig(resultStr), nil
+}
+
+func (web3 *Web3Client) GetLogs(filter *Filter) ([]*Log, error) {
+	rawData, err := web3.RpcCall("eth_getLogs", []interface{}{ filter })
+	if err != nil {
+		return nil, err
+	}
+	logs := make([]*Log, 0)
+	err = json.Unmarshal(rawData, &logs)
+	return logs, err
 }
 
 func (web3 *Web3Client) RpcCall(method string, params []interface{}) ([]byte, error) {
