@@ -18,9 +18,12 @@ func NewWeb3Client(rpcEndpoint string) *Web3Client {
 	return &Web3Client{ url: rpcEndpoint }
 }
 
-func (web3 *Web3Client) EstimateGas(tx *Tx) (int64, error) {
+func (web3 *Web3Client) EstimateGas(tx *Tx, args ...interface{}) (int64, error) {
 	params := []interface{} {
-		ToData(tx), "latest",
+		ToData(tx),
+	}
+	if len(args) > 0 {
+		params = append(params, args...)
 	}
 	data, err := web3.RpcCall("eth_estimateGas", params)
 	if err != nil {
@@ -33,10 +36,12 @@ func (web3 *Web3Client) EstimateGas(tx *Tx) (int64, error) {
 	return HexToInt64(resultStr), nil
 }
 
-func (web3 *Web3Client) Call(target string, callData string) (string, error) {
+func (web3 *Web3Client) Call(target string, callData string, args ...interface{}) (string, error) {
 	params := []interface{} {
 		&struct { To string `json:"to"`; Data string `json:"data"`} { target, callData },
-		"latest",
+	}
+	if len(args) > 0 {
+		params = append(params, args...)
 	}
 	data, err := web3.RpcCall("eth_call", params)
 	if err != nil {
@@ -91,10 +96,12 @@ func (web3 *Web3Client) GetBlockNumber() (int64, error) {
 	return HexToInt64(numberStr), nil
 }
 
-func (web3 *Web3Client) GetBalance(address string) (*big.Int, error) {
+func (web3 *Web3Client) GetBalance(address string, args ...interface{}) (*big.Int, error) {
 	params := []interface{} {
 		address,
-		"latest",
+	}
+	if len(args) > 0 {
+		params = append(params, args...)
 	}
 	data, err := web3.RpcCall("eth_getBalance", params)
 	if err != nil {
