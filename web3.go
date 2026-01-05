@@ -54,6 +54,17 @@ func (web3 *Web3Client) Call(target string, callData string, args ...interface{}
 	return resultStr, nil
 }
 
+func (web3 *Web3Client) GetBlockByNumber(blockTag string, full bool) (*Block, error) {
+	params := []interface{} { blockTag, full }
+	data, err := web3.RpcCall("eth_getBlockByNumber", params)
+	if err != nil {
+		return nil, err
+	}
+	b := &Block{}
+	err = json.Unmarshal(data, b)
+	return b, err
+}
+
 func (web3 *Web3Client) GetTxByHash(hash string) (*TxData, error) {
 	params := []interface{} {
 		hash,

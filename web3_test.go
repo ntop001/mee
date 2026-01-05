@@ -49,6 +49,18 @@ func TestWeb3Client_Call(t *testing.T) {
 	fmt.Println("get result:", string(data))
 }
 
+func TestWeb3Client_GetBlockByNumber(t *testing.T) {
+	web3 := NewWeb3Client(os.Getenv("WEB3RPC_URL"))
+
+	// run
+	b, err := web3.GetBlockByNumber("latest", false)
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Println("get block number:", b.Number)
+	fmt.Println("get block timestamp:", b.Timestamp)
+}
+
 func TestWeb3Client_GetTxByHash(t *testing.T) {
 	web3 := NewWeb3Client(os.Getenv("WEB3RPC_URL"))
 	hash := "0x090d7fdb3f8c0440667404c4f210a51803877f4e86ab1f3b2748ce1df43aa6e8"
