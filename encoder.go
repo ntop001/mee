@@ -117,7 +117,7 @@ func abiEncodeType(data interface{}, a *Arg) (string, bool) {
 
 func abiEncodeBytes(bytes []byte) (string, bool) {
 	hexStr := BytesToHex(bytes)
-	sz := int64(len(bytes)*2)
+	sz := int64(len(bytes))
 	block := Int64ToHex(sz)+hexStr
 	return block, true
 }
